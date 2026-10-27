@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" class="auth-pending system-initializing">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171626" />
+    <meta name="description" content="Intelli-Gate screening dashboard prototype with an interactive, clearly labeled local demonstration mode." />
+    <title>Intelli-Gate | SC Dashboard Command Center</title>
+    <link rel="icon" type="image/png" href="assets/southland-college-crest.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <dialog class="alert-takeover" id="alert-takeover" aria-labelledby="takeover-title" aria-describedby="takeover-detail">
+      <div class="takeover-timer" role="timer" aria-label="Time since alert activated" aria-live="off">
+        <span>ALERT DURATION</span>
+        <strong id="takeover-timer">00:00:00</strong>
+      </div>
+      <div class="alert-takeover-card">
+        <div class="takeover-signal" aria-hidden="true"><svg class="icon"><use href="#i-alert"/></svg></div>
+        <span class="takeover-kicker">WARNING MESSAGE · SCREENING ALERT</span>
+        <h1 id="takeover-title">HOLD. Metal Object Detected!</h1>
+        <p id="takeover-detail">Keep the gate area clear. Follow the screening procedure before allowing the next passage.</p>
+        <div class="takeover-meta" id="takeover-meta">DETECTED ZONE · Z02</div>
+        <button class="takeover-entry-button" id="takeover-entry" type="button"><svg class="icon"><use href="#i-walk"/></svg>Record next entry · clear alert</button>
+        <button class="takeover-reset-button" id="takeover-reset" type="button">CLEARED</button>
+        <small>This prototype uses simulated screening data.</small>
+      </div>
+    </dialog>
+    <section class="machine-reboot" id="machine-reboot" role="dialog" aria-modal="true" aria-labelledby="machine-reboot-title" aria-describedby="machine-reboot-description" tabindex="-1" hidden>
+      <div class="machine-reboot-card">
+        <span class="machine-reboot-kicker">INTELLI-GATE SYSTEM REINITIALIZATION</span>
+        <h2 id="machine-reboot-title">SYSTEM REBOOT IN PROGRESS</h2>
+        <p id="machine-reboot-description">The INTELLI-GATE dashboard is resetting its control states, reinitializing simulated monitoring modules, and preparing dashboard services for operational readiness.</p>
+        <strong class="machine-reboot-countdown" id="machine-reboot-countdown" role="timer" aria-label="Reboot time remaining" aria-live="off">00:30</strong>
+        <div class="machine-reboot-track" aria-hidden="true"><span></span></div>
+        <div class="machine-reboot-scroll" id="machine-reboot-scroll" aria-live="polite" hidden>
+          <span>INITIATING...</span><span aria-hidden="true">INITIATING...</span>
+        </div>
+      </div>
+    </section>
+
+    <svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-gate" viewBox="0 0 24 24"><path d="M5 21V3h14v18M5 7h14M8 21V7m8 14V7M3 21h18"/></symbol>
+      <symbol id="i-thermometer" viewBox="0 0 24 24"><path d="M14 14.8V5a3 3 0 0 0-6 0v9.8a5 5 0 1 0 6 0Z"/><path d="M11 11v7"/></symbol>
+      <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="m12 7-3 5-4 2m7-7 3 4 4 1m-7-5 1 5-3 4-1 5m4-9 3 4 3 1"/></symbol>
+      <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2"/><path d="M3 20v-2a6 6 0 0 1 12 0v2Zm13-6a4 4 0 0 1 5 4v2h-4"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="m10.3 3.9-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3.1l-8-14a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 4h.01"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a8 8 0 0 1-1.4.8l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.4-.8l-1.7.6-1.4-2.4L8 15a8 8 0 0 1 0-1.8l-1.5-1.1L8 9.7l1.7.6a8 8 0 0 1 1.4-.8l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.4.8l1.7-.6 1.4 2.4-1.5 1.1a8 8 0 0 1-.1 1.8Z"/></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h2m4 0h2m-8 3h2"/></symbol>
+      <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4M10 10h4v4h-4z"/></symbol>
+      <symbol id="i-magnet" viewBox="0 0 24 24"><path d="M5 14V6a3 3 0 0 1 6 0v8m2 0V6a3 3 0 0 1 6 0v8a8 8 0 0 1-16 0v-2h6v2a2 2 0 0 0 4 0Z"/><path d="M5 7h6m2 0h6"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10m5 10V4m5 16v-7m5 7V7M2 21h20"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8m-8 4h8"/></symbol>
+      <symbol id="i-network" viewBox="0 0 24 24"><circle cx="6" cy="12" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="m8 11 8-4m-8 6 8 4"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></symbol>
+    </svg>
+
+    <header class="topbar" inert>
+      <a class="brand" href="#" aria-label="Intelli-Gate home">
+        <span class="brand-mark"><img src="assets/southland-college-crest.png" alt="" /></span>
+        <span class="brand-name">INTELLI-GATE<small>DASHBOARD SC COMMAND CENTER</small></span>
+      </a>
+      <p class="product-description"><span>SECSA · ENGINEERING</span><br />AN IOT-BASED SMART GATE SYSTEM WITH TEMPERATURE SCREENING, HEADCOUNT MONITORING, AND METAL DETECTION</p>
+      <div class="clock-block"><svg class="icon"><use href="#i-calendar"/></svg><span><small class="timezone-label">PHILIPPINE STANDARD TIME · UTC+8</small><strong id="current-date">Monday, August 26, 2025</strong><small id="current-time">14:32:18</small></span></div>
+      <div class="system-status"><span class="pulse"></span><span><strong id="system-status-title">SYSTEM INITIALIZING</strong><small>Prototype · IoT AUTOMATION CONTROL</small></span></div>
+      <div class="session-controls"><span id="session-identity" aria-live="polite">Checking session…</span><button id="logout-button" type="button">Sign out</button></div>
+      <button class="presentation-button" id="presentation-mode" type="button" aria-pressed="false">⛶ <span>FullScreen</span></button>
+    </header>
+
+    <main class="dashboard" inert>
+      <section class="demo-banner" aria-label="Interactive demonstration controls">
+        <div class="demo-intro">
+          <span class="demo-kicker">INTERACTIVE SIMULATION · NO SENSOR DATA</span>
+          <h1>Southland College Campus Walk-through Entrance Screening.</h1>
+          <p>Securing an Entry, with zone alert, or a high-temperature reading.</p>
+        </div>
+        <div class="demo-actions">
+          <span class="demo-mode"><span class="pulse"></span><span id="simulation-mode-label">INITIALIZING</span></span>
+          <button class="demo-button" id="simulate-entry" type="button"><svg class="icon"><use href="#i-walk"/></svg>Simulate entry</button>
+          <button class="demo-button" id="simulate-exit" type="button"><svg class="icon"><use href="#i-walk"/></svg>Simulate exit</button>
+          <button class="demo-button demo-warning-button" id="simulate-metal" type="button"><svg class="icon"><use href="#i-magnet"/></svg>Random zone alert</button>
+          <button class="demo-button demo-critical-button" id="simulate-temperature" type="button"><svg class="icon"><use href="#i-thermometer"/></svg>High temperature</button>
+          <button class="demo-button reports-button" id="reports-button" type="button" aria-controls="reports-view" aria-expanded="false"><svg class="icon"><use href="#i-file"/></svg>Reports</button>
+          <button class="reset-button" id="reset-demo" type="button" title="Restore the starting demo values">Reset</button>
+        </div>
+    
+      </section>
+      <div id="live-dashboard">
+      <section class="metrics" aria-label="Today's overview">
+        <article class="metric-card">
+          <div class="metric-icon green"><svg class="icon"><use href="#i-thermometer"/></svg></div>
+          <div><span class="metric-label">Latest temperature</span><strong class="metric-value" id="live-temperature">— <small>°C</small></strong><span class="metric-note good" id="temperature-note">Awaiting simulated screening</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon blue"><svg class="icon"><use href="#i-walk"/></svg></div>
+          <div><span class="metric-label">Entries today</span><strong class="metric-value" id="entry-count">0</strong><span class="metric-note good">Since demo start</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon blue"><svg class="icon"><use href="#i-walk"/></svg></div>
+          <div><span class="metric-label">Exits today</span><strong class="metric-value" id="exit-count">0</strong><span class="metric-note good">Since demo start</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon blue"><svg class="icon"><use href="#i-people"/></svg></div>
+          <div><span class="metric-label">Current occupancy</span><strong class="metric-value" id="occupancy-count">0</strong><span class="metric-note">Inside area</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon red"><svg class="icon"><use href="#i-alert"/></svg></div>
+          <div><span class="metric-label">Total alerts</span><strong class="metric-value alert-number" id="total-alert-count">0</strong><span class="metric-note" id="alert-breakdown"><span id="detected-alert-count">0</span> Detected&nbsp; | &nbsp;<span id="cleared-alert-count">0</span> Cleared</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon green"><svg class="icon"><use href="#i-settings"/></svg></div>
+          <div><span class="metric-label">Physical devices</span><strong class="metric-value">0 / 6</strong><span class="metric-note">Not connected · simulation only</span></div>
+        </article>
+      </section>
+
+      <section class="main-grid" aria-label="Live screening and controls">
+        <article class="panel gate-panel">
+          <div class="panel-heading"><h2><span class="heading-icon">◉</span> Gate simulation <span class="subheading">(front view)</span></h2><span class="live-label"><span class="pulse"></span><span id="gate-state">INITIALIZING</span></span></div>
+          <div class="gate-content">
+            <div class="gate-stage">
+              <div class="zone zone-left">
+                <span class="zone-tag"><strong>Z01</strong><small>L_UPPER</small></span><span class="zone-tag"><strong>Z02</strong><small>L_MIDDLE</small></span><span class="zone-tag"><strong>Z03</strong><small>L_LOWER</small></span>
+              </div>
+              <div class="gate-illustration" aria-label="Simulated walk-through detector visual with six detection zones; no hardware is connected">
+                <span class="gate-active-label">INITIALIZING</span>
+                <progress class="gate-entry-progress" id="gate-entry-progress" max="100" value="0" aria-label="Person passage progress through the detector"></progress>
+                <div class="gate-top"><b>INTELLI-GATE</b><small>WALK THROUGH</small><span>▦</span></div>
+                <div class="gate-leg left"></div><div class="gate-leg right"></div>
+                <svg class="person-silhouette" viewBox="0 0 100 230" aria-hidden="true"><circle cx="50" cy="22" r="16"/><path d="M37 45Q50 38 63 45l9 53-12 3-5-35 4 48 13 68h-14l-8-53-8 53H28l12-68 4-48-5 35-12-3z"/></svg>
+                <div class="gate-alert-smoke" aria-hidden="true"></div>
+                <span class="detector-dot dot-left dot-1" data-zone="Z01"></span><span class="detector-dot dot-left dot-2" data-zone="Z02"></span><span class="detector-dot dot-left dot-3" data-zone="Z03"></span>
+                <span class="detector-dot dot-right dot-1" data-zone="Z04"></span><span class="detector-dot dot-right dot-2" data-zone="Z05"></span><span class="detector-dot dot-right dot-3" data-zone="Z06"></span>
+              </div>
+              <div class="zone zone-right">
+                <span class="zone-tag"><strong>Z04</strong><small>R_UPPER</small></span><span class="zone-tag"><strong>Z05</strong><small>R_MIDDLE</small></span><span class="zone-tag"><strong>Z06</strong><small>R_LOWER</small></span>
+              </div>
+            </div>
+            <div class="legend"><span><i class="dot normal"></i>Normal</span><span><i class="dot metal"></i>Metal detected</span><span><i class="dot attention"></i>Attention</span><span><i class="dot inactive"></i>Inactive</span></div>
+          </div>
+        </article>
+
+        <div class="middle-column">
+          <article class="panel event-panel">
+            <div class="panel-heading"><h2><svg class="icon"><use href="#i-file"/></svg> Latest screening event</h2><span class="live-label"><span class="pulse"></span>Demo capture</span></div>
+            <div class="event-content">
+              <div class="passage-card"><div class="person-card" id="passage-people" role="img" aria-label="Single person"><svg class="single-person-icon" viewBox="0 0 100 160" aria-hidden="true"><circle cx="50" cy="22" r="15"/><path d="M37 43Q50 38 63 43l9 47-12 3-5-32 4 40 13 54H57l-7-42-8 42H28l13-54 4-40-5 32-12-3z"/></svg><svg class="multiple-people-icon" viewBox="0 0 100 160" aria-hidden="true"><g class="person-back-left"><circle cx="28" cy="38" r="10"/><path d="M20 52q8-5 16 0l5 31-8 2-3-20 2 26 8 35H29l-5-27-5 27H8l8-35 2-26-3 20-8-2z"/></g><g class="person-back-right"><circle cx="72" cy="38" r="10"/><path d="M64 52q8-5 16 0l5 31-8 2-3-20 2 26 8 35H73l-5-27-5 27H52l8-35 2-26-3 20-8-2z"/></g><g class="person-front"><circle cx="50" cy="25" r="13"/><path d="M39 42q11-7 22 0l7 39-10 3-4-26 3 33 10 45H54l-4-34-4 34H31l10-45 3-33-4 26-10-3z"/></g></svg><svg class="community-people-icon" viewBox="0 0 120 150" aria-hidden="true"><g class="community-back"><circle cx="28" cy="38" r="11"/><circle cx="92" cy="38" r="11"/><path d="M18 53q10-7 20 0l7 35-10 2-4-22 3 28 8 38H25l-5-30-5 30H1l11-38 3-28-4 22-10-2zM82 53q10-7 20 0l7 35-10 2-4-22 3 28 8 38H89l-5-30-5 30H65l11-38 3-28-4 22-10-2z"/></g><g class="community-middle"><circle cx="60" cy="49" r="12"/><path d="M49 64q11-7 22 0l7 33-10 2-4-21 3 28 8 36H61l-5-28-5 28H36l8-36 3-28-4 21-10-2z"/></g><g class="community-front"><circle cx="39" cy="27" r="12"/><circle cx="81" cy="27" r="12"/><path d="M28 42q11-7 22 0l7 35-10 2-4-22 3 29 8 39H40l-5-31-5 31H15l10-39 3-29-4 22-10-2zM70 42q11-7 22 0l7 35-10 2-4-22 3 29 8 39H82l-5-31-5 31H57l10-39 3-29-4 22-10-2z"/></g></svg></div><div class="passage-details"><span class="muted">Passage ID</span><strong id="passage-id">Awaiting event</strong><span class="muted">Direction</span><span class="badge entry" id="passage-direction">—</span><span class="muted event-time-label">Time</span><span class="event-time" id="event-time">No simulated screening yet</span></div></div>
+              <div class="event-findings"><div class="finding hot"><svg class="icon"><use href="#i-thermometer"/></svg><div><span>Temperature</span><strong id="event-temperature">— °C</strong><span class="badge normal-badge" id="temperature-badge">NO READING</span><small>Threshold: <span id="threshold-readout">37.5</span> °C</small></div></div><div class="finding metal no-metal" id="metal-finding"><svg class="icon"><use href="#i-magnet"/></svg><div><span>Detected zone(s)</span><strong id="detected-zone">Awaiting screening</strong><span class="badge detected" id="metal-badge" hidden>METAL DETECTED</span><small id="metal-detail">All detection zones clear</small></div></div></div>
+            </div>
+          </article>
+          <article class="panel alerts-panel">
+            <div class="panel-heading"><h2><svg class="icon alert-icon"><use href="#i-alert"/></svg> Active alerts &amp; history</h2><div class="alert-heading-actions"><div class="alert-totals"><span class="badge detected">0&nbsp; Detected</span><span class="badge alert-completed">0&nbsp; Cleared</span></div><span class="alert-clear-note">Active alerts clear on next entry</span></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Detected</th><th>Type</th><th>Detection details</th><th>Zone</th><th>Alert status</th><th>Completion time</th></tr></thead><tbody id="alerts-log"></tbody></table></div>
+          </article>
+        </div>
+
+        <div class="right-column">
+          <article class="panel devices-panel">
+            <div class="panel-heading"><h2><svg class="icon"><use href="#i-settings"/></svg> Device connection status</h2><span class="live-label">HARDWARE OFFLINE</span></div>
+            <div class="device-list">
+              <div class="device-row" data-device-id="raspberry-pi" data-device-ready="Not connected"><svg class="icon"><use href="#i-chip"/></svg><span>Raspberry Pi 5 <small>(Main Controller)</small></span><i></i><span class="device-state">Initializing</span><code>Awaiting startup check</code></div>
+              <div class="device-row" data-device-id="esp32" data-device-ready="No UART link"><svg class="icon"><use href="#i-chip"/></svg><span>ESP32 <small>(Metal Detection)</small></span><i></i><span class="device-state">Initializing</span><code>Awaiting startup check</code></div>
+              <div class="device-row" data-device-id="mlx90614" data-device-ready="Sample only"><svg class="icon"><use href="#i-thermometer"/></svg><span>MLX90614 <small>(Temperature Sensor)</small></span><i></i><span class="device-state">Initializing</span><code id="sensor-temperature">Awaiting startup check</code></div>
+              <div class="device-row" data-device-id="break-beam-entry" data-device-ready="Simulated only"><svg class="icon"><use href="#i-network"/></svg><span>Break-Beam A <small>(Entry Sensor)</small></span><i></i><span class="device-state">Initializing</span><code>Awaiting startup check</code></div>
+              <div class="device-row" data-device-id="break-beam-exit" data-device-ready="Simulated only"><svg class="icon"><use href="#i-network"/></svg><span>Break-Beam B <small>(Exit Sensor)</small></span><i></i><span class="device-state">Initializing</span><code>Awaiting startup check</code></div>
+              <div class="device-row" data-device-id="lcd" data-device-ready="Not connected"><svg class="icon"><use href="#i-file"/></svg><span>I²C LCD <small>(20x4 / 16x2)</small></span><i></i><span class="device-state">Initializing</span><code>Awaiting startup check</code></div>
+              <div class="device-row" data-device-id="application-api" data-device-ready="Application API"><svg class="icon"><use href="#i-globe"/></svg><span>Dashboard API <small>(Authenticated server)</small></span><i></i><span class="device-state">Initializing</span><code>Awaiting startup check</code></div>
+            </div>
+          </article>
+          <article class="panel settings-panel">
+            <div class="panel-heading"><h2><svg class="icon"><use href="#i-settings"/></svg> Screening settings &amp; thresholds</h2></div>
+            <form id="settings-form" class="settings-content">
+              <label class="setting-row" for="threshold"><svg class="icon"><use href="#i-thermometer"/></svg><span>Temperature threshold</span><span class="input-suffix"><input id="threshold" type="number" min="30" max="45" step="0.1" value="37.5" aria-label="Temperature threshold in degrees Celsius" /><b>°C</b></span></label>
+              <fieldset class="setting-row alarm-row"><legend><svg class="icon"><use href="#i-bell"/></svg><span>Alarm controls</span></legend><label><input id="audio-alarm-enabled" type="checkbox" checked /> Audio alarm</label><label><input type="checkbox" checked /> Visual LED</label><label><input type="checkbox" checked /> LCD notification</label><span class="alarm-state" id="alarm-state" role="status" aria-live="polite">SOUND ARMED</span></fieldset>
+              <label class="setting-row" for="sensitivity"><svg class="icon"><use href="#i-chart"/></svg><span>Detection sensitivity</span><select id="sensitivity"><option>Low</option><option selected>Medium</option><option>High</option></select></label>
+              <div class="settings-feedback" id="settings-feedback" role="status" aria-live="polite"></div>
+            </form>
+          </article>
+        </div>
+      </section>
+      </div>
+
+      <section class="reports-view" id="reports-view" aria-labelledby="reports-title" hidden>
+        <div class="reports-heading">
+          <div>
+            <span class="demo-kicker">INTELLI-GATE · SCREENING ANALYTICS</span>
+            <h1 id="reports-title">Reports &amp; activity</h1>
+            <p>Traffic, detection zones, screening records, and operational recommendations.</p>
+          </div>
+          <div class="reports-tools">
+            <label for="report-range">Reporting period</label>
+            <select id="report-range">
+              <option value="24h">Last 24 hours</option>
+              <option value="7d">Last 7 days</option>
+              <option value="all">All available demo records</option>
+            </select>
+            <button class="report-action" id="export-report" type="button"><svg class="icon"><use href="#i-file"/></svg>Export CSV</button>
+            <button class="report-action" id="print-report" type="button"><svg class="icon"><use href="#i-chart"/></svg>Print report</button>
+            <button class="report-action return-button" id="return-dashboard" type="button">← Dashboard</button>
+          </div>
+        </div>
+        <p class="report-note"><span class="pulse"></span> MACHINE REPORT <span>Sample data for demonstration only · No hardware is connected</span></p>
+        <div class="report-summary" aria-label="Report summary">
+          <article class="report-stat"><span>People screened today</span><strong id="report-screenings">0</strong><small>Demo entries + exits</small></article>
+          <article class="report-stat"><span>Metal-zone detections</span><strong id="report-metals">0</strong><small>Across all six simulated zones</small></article>
+          <article class="report-stat"><span>Elevated temperatures</span><strong id="report-elevated">0</strong><small>In available demo records</small></article>
+          <article class="report-stat"><span>Current occupancy</span><strong id="report-occupancy">0</strong><small>Demo count only</small></article>
+        </div>
+        <div class="report-charts">
+          <article class="panel chart-panel">
+            <div class="panel-heading"><h2><svg class="icon"><use href="#i-chart"/></svg> Foot traffic <span class="subheading">(last 24 hours)</span></h2><div class="chart-legend"><span><i class="chart-key entries-key"></i>Entries</span><span><i class="chart-key exits-key"></i>Exits</span></div></div>
+            <div class="traffic-chart" id="traffic-chart" aria-label="Bar chart of hourly entries and exits"></div>
+          </article>
+          <article class="panel chart-panel zone-chart-panel">
+            <div class="panel-heading"><h2><svg class="icon"><use href="#i-people"/></svg> Zone activity <span class="subheading">(today)</span></h2><div class="chart-legend"><span><i class="chart-key metal-key"></i>Metal detections</span><span><i class="chart-key triggers-key"></i>Total triggers</span></div></div>
+            <div class="zone-chart" id="zone-chart" aria-label="Bar chart of triggers and metal detections by zone"></div>
+          </article>
+        </div>
+        <article class="panel recommendations-panel">
+          <div class="panel-heading"><h2><svg class="icon"><use href="#i-bell"/></svg> Operational recommendations</h2><span class="report-generated" id="report-generated">Based on demo records</span></div>
+          <ul class="recommendations-list" id="recommendations-list"></ul>
+        </article>
+        <article class="panel log-panel report-event-panel">
+          <div class="panel-heading"><h2><svg class="icon"><use href="#i-file"/></svg> Screening event log</h2><span class="report-generated" id="event-log-count">Latest records</span></div>
+          <div class="table-wrap"><table><thead><tr><th>Timestamp</th><th>Passage ID</th><th>Direction</th><th>Temperature</th><th>Detected zone(s)</th><th>Status</th></tr></thead><tbody id="event-log"></tbody></table></div>
+        </article>
+      </section>
+      <footer>INTELLI-GATE · SECSA INFORMATION TECHNOLOGY <span>Interactive local prototype · Sample data only · No hardware connected</span></footer>
+    </main>
+    <section class="system-initialization" id="system-initialization" role="dialog" aria-modal="true" aria-labelledby="initialization-title" aria-describedby="initialization-description" tabindex="-1">
+      <div class="initialization-card">
+        <div class="initialization-brand"><span class="initialization-brand-mark">IG</span><span>INTELLI-GATE<small>SCREENING SIMULATION</small></span></div>
+        <div class="initialization-status"><span class="initialization-status-dot"></span><span id="initialization-phase">SECURE STARTUP SEQUENCE</span></div>
+        <h1 id="initialization-title">Initializing system</h1>
+        <p id="initialization-description">Verifying the authenticated dashboard and preparing its Device controls.</p>
+        <div class="initialization-progress-track" role="progressbar" aria-label="System initialization progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span id="initialization-progress"></span>
+        </div>
+        <ol class="initialization-checks" aria-label="Initialization checks">
+          <li data-init-step="session"><span class="init-check-icon"></span><span><strong>Operator session</strong><small>Verifying authenticated access</small></span><span class="init-check-state">WAITING</span></li>
+          <li data-init-step="server"><span class="init-check-icon"></span><span><strong>Application services</strong><small>Checking the authenticated API</small></span><span class="init-check-state">WAITING</span></li>
+          <li data-init-step="simulation"><span class="init-check-icon"></span><span><strong>Demo controls</strong><small>Preparing local Machine Connections</small></span><span class="init-check-state">WAITING</span></li>
+          <li data-init-step="hardware"><span class="init-check-icon"></span><span><strong>Physical hardware</strong><small>Pi, ESP32 and sensors are not connected</small></span><span class="init-check-state">OFFLINE</span></li>
+        </ol>
+        <p class="initialization-result" id="initialization-result" role="status" aria-live="polite">System controls are locked during startup.</p>
+        <button class="initialization-retry" id="initialization-retry" type="button" hidden>Retry software checks</button>
+        <p class="initialization-disclaimer">Software readiness does not verify or activate physical screening equipment.</p>
+      </div>
+    </section>
+    <section class="fullscreen-prompt" id="fullscreen-prompt" role="dialog" aria-modal="true" aria-labelledby="fullscreen-title" aria-describedby="fullscreen-description" tabindex="-1" hidden>
+      <div class="fullscreen-prompt-card">
+        <span class="fullscreen-prompt-kicker">INITIALIZATION COMPLETE</span>
+        <h2 id="fullscreen-title">DASHBOARD SIMULATION READY</h2>
+        <p id="fullscreen-description">Software checks passed. Screening values are simulated; physical screening hardware is not connected.</p>
+        <p class="fullscreen-prompt-error" id="fullscreen-prompt-error" role="status" aria-live="polite"></p>
+        <div class="fullscreen-prompt-actions">
+          <button id="enter-fullscreen" type="button">Proceed</button>
+          <button id="continue-windowed" type="button">Continue in window</button>
+        </div>
+      </div>
+    </section>
+    <script src="dashboard-auth.js"></script>
+    <script src="screening-model.js"></script>
+    <script src="app.js"></script>
+    <script src="system-initialization.js"></script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+digraph Level1 {
+	bgcolor=white fontname="DejaVu Sans" fontsize=16 label=<<FONT POINT-SIZE="24" COLOR="#15283E"><B>FIGURE 3B  |  LOGICAL DFD (LEVEL 1)</B></FONT><BR/><FONT POINT-SIZE="12" COLOR="#52687C">Balanced decomposition of Process 0  •  data movement, processing, persistence and presentation</FONT>> labeljust=l labelloc=t nodesep=.52 outputorder=edgesfirst pad=.35 rankdir=LR ranksep=.82 splines=spline
+	node [color="#15283E" fontcolor="#15283E" fontname="DejaVu Sans" fontsize=12 margin=".19,.12" penwidth=1.5]
+	edge [arrowsize=.7 color="#52687C" fontcolor="#52687C" fontname="DejaVu Sans" fontsize=9 penwidth=1.35]
+	t [label="E1 · MLX90614" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	b [label="E2 · Break-beam sensors" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	m [label="E3 · 4-zone coils" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	u [label="E4 · Security officer / administrator" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	io [label="E5 · Local LCD / buzzer" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	p1 [label="1.0
+Acquire and validate
+sensor readings" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p2 [label="2.0
+Classify temperature
+and metal zones" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p3 [label="3.0
+Count directional
+passages" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p4 [label="4.0
+Evaluate alert rules
+and dispatch" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p5 [label="5.0
+Persist events
+and settings" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p6 [label="6.0
+Authenticate and serve
+monitoring dashboard" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	d1 [label="D1 · users" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	d2 [label="D2 · headcount_logs" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	d3 [label="D3 · temperature_logs" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	d4 [label="D4 · metal_detection_logs" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	d5 [label="D5 · alerts" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	d6 [label="D6 · system_settings" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	t -> p1 [label="raw °C"]
+	b -> p1 [label="IR pulse sequence"]
+	m -> p1 [label="4 coil signals"]
+	p1 -> p2 [label="validated temp / coil samples"]
+	p1 -> p3 [label="validated beam sequence"]
+	p2 -> p4 [label="screening classifications"]
+	p3 -> p4 [label="entry/exit events"]
+	p2 -> p5 [label="screening records"]
+	p3 -> p5 [label="passage + tally"]
+	p4 -> p5 [label="alert records"]
+	p5 -> d2 [label="count events"]
+	p5 -> d3 [label="temp events"]
+	p5 -> d4 [label="zone detections"]
+	p5 -> d5 [label="alert history"]
+	d6 -> p2 [label="thresholds / sensitivity"]
+	d6 -> p4 [label="alarm policy"]
+	p4 -> io [label="LCD / audible indicators"]
+	u -> p6 [label="credentials / queries / acknowledgment"]
+	p6 -> u [label="live status / historic data / alerts"]
+	d1 -> p6 [label="accounts + roles"]
+	d2 -> p6 [label=counts]
+	d3 -> p6 [label=temperature]
+	d4 -> p6 [label="metal zones"]
+	d5 -> p6 [label=alerts]
+	p6 -> d5 [label="acknowledgment updates"]
+	p6 -> d6 [label="authorized configuration"]
+	d6 -> p6 [label="current settings"]
+}

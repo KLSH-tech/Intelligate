@@ -1,0 +1,70 @@
+digraph Architecture {
+	bgcolor=white fontname="DejaVu Sans" fontsize=16 label=<<FONT POINT-SIZE="24" COLOR="#15283E"><B>FIGURE 4  |  COMPLETE SYSTEM ARCHITECTURE</B></FONT><BR/><FONT POINT-SIZE="12" COLOR="#52687C">INTELLI-GATE  •  layered physical + logical architecture  •  LAN-first edge-hosted implementation</FONT>> labeljust=l labelloc=t nodesep=.52 outputorder=edgesfirst pad=.35 rankdir=LR ranksep=.82 splines=spline
+	node [color="#15283E" fontcolor="#15283E" fontname="DejaVu Sans" fontsize=12 margin=".19,.12" penwidth=1.5]
+	edge [arrowsize=.7 color="#52687C" fontcolor="#52687C" fontname="DejaVu Sans" fontsize=9 penwidth=1.35]
+	nodesep=.45 ranksep=1.05
+	subgraph cluster_sensors {
+		color="#C3DBF1" fillcolor="#F2F7FC" fontcolor="#15283E" fontsize=15 label="LAYER 1  |  SENSING / PHYSICAL GATE" style="rounded,filled"
+		ir [label="MLX90614
+non-contact infrared
+I²C" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+		beams [label="Two break-beam channels
+passage order / direction
+GPIO" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+		coils [label="Four inductive coils
+UPPER · MIDDLE
+LOWER · BAG
+GPIO / interface" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+		supply [label="Regulated power supplies
+5 V Pi · separate motor rail" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	}
+	subgraph cluster_edge {
+		color="#A4DFD9" fillcolor="#F0FBFA" fontcolor="#15283E" fontsize=15 label="LAYER 2  |  EDGE CONTROL — RASPBERRY PI 4" style="rounded,filled"
+		iface [label="Python hardware drivers
+smbus2 · GPIO / gpiozero" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+		logic [label="Acquisition + validation
+passage direction + 4-zone logic
+threshold / alert engine" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+		ops [label="Local I/O controller
+LCD · buzzer · optional servo" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+		store [label="SQLite 3
+users · headcount_logs
+temperature_logs · metal_detection_logs
+alerts · system_settings" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+		web [label="Flask REST routes +
+Flask-SocketIO event hub
+role-based access control" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	}
+	subgraph cluster_lan {
+		color="#FFE1B9" fillcolor="#FFF8EF" fontcolor="#15283E" fontsize=15 label="LAYER 3  |  CAMPUS NETWORK" style="rounded,filled"
+		net [label="Ethernet / secured Wi-Fi
+Campus LAN · IP routing
+HTTPS / WSS (recommended)" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	}
+	subgraph cluster_users {
+		color="#DAD1F2" fillcolor="#F8F5FE" fontcolor="#15283E" fontsize=15 label="LAYER 4  |  PRESENTATION / HUMAN OVERSIGHT" style="rounded,filled"
+		lcd [label="Gate-side 16×2 / 20×4 LCD
+and piezo buzzer" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+		motor [label="Optional servo gate
+manual override recommended" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+		dash [label="Command-centre browser
+HTML5 · CSS3 · JavaScript
+live temperature / headcount / metal
+alert review / reporting" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+		staff [label="Authorized security personnel
+and school administrator" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	}
+	ir -> iface [label="I²C measurements"]
+	beams -> iface [label="GPIO digital states"]
+	coils -> iface [label="conditioned zone signals"]
+	iface -> logic [label="timestamped samples"]
+	logic -> store [label="logs + alert records"]
+	store -> web [label="SQL queries / updates"]
+	logic -> ops [label="alerts / optional actuate"]
+	ops -> lcd [label="I²C / GPIO"]
+	ops -> motor [label="driver + signal"]
+	web -> net [label="HTTP(S) + Socket.IO"]
+	net -> dash [label="LAN dashboard sessions"]
+	dash -> staff [label="status / alerts"]
+	staff -> dash [label="queries / acknowledgment"]
+}

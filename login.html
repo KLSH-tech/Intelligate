@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171626" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Sign in | Intelli-Gate</title>
+    <link rel="icon" type="image/png" href="assets/southland-college-crest.png" />
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body>
+    <main class="login-shell">
+      <section class="login-card" aria-labelledby="login-title">
+        <a class="login-brand" href="/login" aria-label="Intelli-Gate sign in">
+          <img src="assets/southland-college-crest.png" alt="" />
+          <span>INTELLI-GATE<small>WALTHROUGH MATAL DETECTOR COMMAND CENTER</small></span>
+        </a>
+        <span class="login-kicker">SECURE OPERATOR ACCESS</span>
+        <h1 id="login-title">Sign in to your account</h1>
+        <p class="login-intro">Authorized users only. Your session expires automatically after 30 minutes.</p>
+        <form id="login-form" autocomplete="on">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="64" required autofocus />
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required />
+          <button id="login-submit" type="submit">Sign in securely</button>
+          <p id="login-message" class="login-message" role="status" aria-live="polite"></p>
+        </form>
+        <div class="security-note">
+          <strong>Protected system</strong>
+          <span>Use your assigned account. Never share credentials or leave an active session unattended.</span>
+        </div>
+        <p class="prototype-note">Intelli-Gate local Machine prototype · simulated screening data · no hardware control</p>
+      </section>
+    </main>
+    <script src="login.js"></script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+digraph Context {
+	bgcolor=white fontname="DejaVu Sans" fontsize=16 label=<<FONT POINT-SIZE="24" COLOR="#15283E"><B>FIGURE 3A  |  CONTEXT DFD (LEVEL 0)</B></FONT><BR/><FONT POINT-SIZE="12" COLOR="#52687C">INTELLI-GATE  •  system boundary and external data interfaces  •  four-zone baseline</FONT>> labeljust=l labelloc=t nodesep=.52 outputorder=edgesfirst pad=.35 rankdir=LR ranksep=.82 splines=spline
+	node [color="#15283E" fontcolor="#15283E" fontname="DejaVu Sans" fontsize=12 margin=".19,.12" penwidth=1.5]
+	edge [arrowsize=.7 color="#52687C" fontcolor="#52687C" fontname="DejaVu Sans" fontsize=9 penwidth=1.35]
+	temp [label="E1 · Infrared
+temperature sensor" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	beam [label="E2 · Entry / exit
+beam sensors" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	metal [label="E3 · Inductive
+metal coils (4 zones)" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	staff [label="E4 · Authorized
+security personnel" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	admin [label="E5 · School
+administrator" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	sys [label="0
+INTELLI-GATE
+monitoring system" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	gate [label="E6 · Local LCD /
+buzzer / gate actuator" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	temp -> sys [label="temperature readings"]
+	beam -> sys [label="beam state / passage signals"]
+	metal -> sys [label="zone signals"]
+	staff -> sys [label="login, acknowledge, query"]
+	sys -> staff [label="live data, alerts, status"]
+	admin -> sys [label="authorized settings, query"]
+	sys -> admin [label="monitoring reports, status"]
+	sys -> gate [label="display / alarm / optional control"]
+	gate -> sys [label="actuator feedback (proposed)"]
+}

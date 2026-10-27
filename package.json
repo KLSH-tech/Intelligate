@@ -1,0 +1,28 @@
+{
+  "name": "intelli-gate-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Intelli-Gate dashboard with Raspberry Pi-hosted authentication",
+  "main": "server.js",
+  "scripts": {
+    "setup": "node setup.js",
+    "start": "node server.js",
+    "create-user": "node server.js create-user",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "connect-sqlite3": "^0.9.16",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "sqlite3": "^5.1.7"
+  },
+  "overrides": {
+    "@tootallnate/once": "^2.0.1",
+    "tar": "^7.5.21"
+  }
+}

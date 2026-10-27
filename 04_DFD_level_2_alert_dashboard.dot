@@ -1,0 +1,53 @@
+digraph Level2B {
+	bgcolor=white fontname="DejaVu Sans" fontsize=16 label=<<FONT POINT-SIZE="24" COLOR="#15283E"><B>FIGURE 3D  |  LEVEL 2 DFD — ALERTS &amp; MONITORING</B></FONT><BR/><FONT POINT-SIZE="12" COLOR="#52687C">Detailed decomposition of Processes 4.0, 5.0 and 6.0  •  local + command centre</FONT>> labeljust=l labelloc=t nodesep=.52 outputorder=edgesfirst pad=.35 rankdir=LR ranksep=.82 splines=spline
+	node [color="#15283E" fontcolor="#15283E" fontname="DejaVu Sans" fontsize=12 margin=".19,.12" penwidth=1.5]
+	edge [arrowsize=.7 color="#52687C" fontcolor="#52687C" fontname="DejaVu Sans" fontsize=9 penwidth=1.35]
+	src [label="Classified screening +
+passage events (from 2.0 / 3.0)" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	user [label="Security officer /
+administrator" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	local [label="Local LCD / buzzer" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	browser [label="LAN browser /
+command centre" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	p41 [label="4.1
+Apply screening and
+alarm policy" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p42 [label="4.2
+Generate / route alert" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p51 [label="5.1
+Commit records +
+transaction timestamps" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p61 [label="6.1
+Authenticate + authorize" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p62 [label="6.2
+Query and aggregate
+monitoring data" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p63 [label="6.3
+Publish real-time feed" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	p64 [label="6.4
+Acknowledge alerts +
+update settings" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	setting [label="D6 · system_settings" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	alerts [label="D5 · alerts" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	records [label="D2–D4 · monitoring logs" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	users [label="D1 · users" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	src -> p41 [label="events / classifications"]
+	setting -> p41 [label="configured policy"]
+	p41 -> p42 [label="rule outcome / severity"]
+	p42 -> local [label="visual / audible warnings"]
+	p42 -> p51 [label="new alert event"]
+	src -> p51 [label="monitoring record"]
+	p51 -> alerts [label="alerts with IDs"]
+	p51 -> records [label="event records"]
+	user -> p61 [label="login credentials"]
+	users -> p61 [label="role / password hash"]
+	p61 -> p62 [label="authorized session"]
+	records -> p62 [label="stored readings and counts"]
+	alerts -> p62 [label="alert states"]
+	p62 -> p63 [label="dashboard snapshot / deltas"]
+	p63 -> browser [label="WebSocket events / UI"]
+	browser -> p64 [label="acknowledgment / config"]
+	p61 -> p64 [label="authorized role"]
+	p64 -> alerts [label="status + acknowledged_by"]
+	p64 -> setting [label="audited settings update"]
+}

@@ -1,0 +1,47 @@
+digraph Level2A {
+	bgcolor=white fontname="DejaVu Sans" fontsize=16 label=<<FONT POINT-SIZE="24" COLOR="#15283E"><B>FIGURE 3C  |  LEVEL 2 DFD — SENSOR SCREENING</B></FONT><BR/><FONT POINT-SIZE="12" COLOR="#52687C">Detailed decomposition of Processes 1.0 and 2.0  •  validation / classification are traceable</FONT>> labeljust=l labelloc=t nodesep=.52 outputorder=edgesfirst pad=.35 rankdir=LR ranksep=.82 splines=spline
+	node [color="#15283E" fontcolor="#15283E" fontname="DejaVu Sans" fontsize=12 margin=".19,.12" penwidth=1.5]
+	edge [arrowsize=.7 color="#52687C" fontcolor="#52687C" fontname="DejaVu Sans" fontsize=9 penwidth=1.35]
+	e1 [label="E1 · MLX90614" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	e2 [label="E2 · IR break beams" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	e3 [label="E3 · Upper / middle / lower / bag coils" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	a [label="1.1
+Read sensor buses" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	v [label="1.2
+Timestamp / validate /
+filter noise" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	tc [label="2.1
+Evaluate temperature
+against threshold" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	zc [label="2.2
+Apply per-zone metal
+sensitivity criteria" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	dir [label="3.1
+Resolve entry/exit
+beam order" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	act [label="2.3
+Publish classified
+screening events" color="#087E8B" fillcolor="#DDF4F2" shape=ellipse style=filled]
+	s [label="D6 · system_settings" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	dtemp [label="D3 · temperature_logs" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	dmet [label="D4 · metal_detection_logs" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	dc [label="D2 · headcount_logs" color="#B76B22" fillcolor="#FFF0DE" shape=box style=filled]
+	down [label="To Process 4.0
+(alert evaluation)" color="#2669B2" fillcolor="#E7EFF8" shape=box style="rounded,filled"]
+	e1 -> a [label="infrared sample"]
+	e2 -> a [label="beam changes"]
+	e3 -> a [label="coil outputs"]
+	a -> v [label="raw tagged samples"]
+	v -> tc [label="valid temperature sample"]
+	v -> zc [label="valid metal signal / zone"]
+	v -> dir [label="ordered beam edges"]
+	s -> tc [label="temperature threshold"]
+	s -> zc [label="per-zone criteria"]
+	tc -> act [label="normal / elevated"]
+	zc -> act [label="detected zones / no hit"]
+	act -> dtemp [label="timestamped reading"]
+	act -> dmet [label="zone events"]
+	act -> down [label="classification + event IDs"]
+	dir -> dc [label="count / occupancy"]
+	dir -> down [label="direction + occupancy"]
+}
